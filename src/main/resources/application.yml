@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: user-service
+    #Database configuration
+  h2:
+    console:
+        enabled: true
+  datasource:
+    url: jdbc:h2:mem:test
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+#      dialect: org.hibernate.dialect.MySQLDialect
+#      format-sql: true
+
+#Server configuration
+server:
+  port: 8082
+
