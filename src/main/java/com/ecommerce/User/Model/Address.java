@@ -38,6 +38,8 @@ public class Address {
     @Size(min=6, message= "Zipcode Name name must be atleast 6 characters")
     private String zipcode;
 
+    private String buildingName;
+
     public Address(String street, String city, String state, String country, String zipcode) {
         this.street = street;
         this.city = city;

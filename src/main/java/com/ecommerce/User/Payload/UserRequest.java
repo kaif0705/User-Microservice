@@ -14,5 +14,6 @@ public class UserRequest {
     private String password;
     private String email;
     private String phone;
+    private String zipcode;
     private AddressDTO address;
 }

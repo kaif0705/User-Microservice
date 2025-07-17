@@ -6,6 +6,7 @@ import com.ecommerce.User.Payload.AddressDTO;
 import com.ecommerce.User.Payload.UserRequest;
 import com.ecommerce.User.Payload.UserResponse;
 import com.ecommerce.User.Repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +25,12 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+
+    @Transactional
     public void addUser(UserRequest userRequest){
         User user = new User();
-        updateUserFromRequest(user, userRequest);
-        userRepository.save(user);
+        User userAdded= updateUserFromRequest(user, userRequest);
+        userRepository.save(userAdded);
     }
 
     public Optional<UserResponse> fetchUser(String id) {
@@ -44,20 +47,35 @@ public class UserService {
                 }).orElse(false);
     }
 
-    private void updateUserFromRequest(User user, UserRequest userRequest) {
+    private User updateUserFromRequest(User user, UserRequest userRequest) {
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
         user.setEmail(userRequest.getEmail());
         user.setPhone(userRequest.getPhone());
+        user.setZipcode(userRequest.getZipcode());
+
         if (userRequest.getAddress() != null) {
-            Address address = new Address();
-            address.setStreet(userRequest.getAddress().getStreet());
-            address.setState(userRequest.getAddress().getState());
-            address.setZipcode(userRequest.getAddress().getZipcode());
-            address.setCity(userRequest.getAddress().getCity());
-            address.setCountry(userRequest.getAddress().getCountry());
-            user.setAddress(address);
+            AddressDTO requestAddressDto = userRequest.getAddress(); // For clarity
+
+            Address addressToUpdate = user.getAddress(); // Get existing address from user
+            if (addressToUpdate == null) {
+                // If user doesn't have an address, create a new one
+                addressToUpdate = new Address();
+            }
+            // else: user already has an address, we will update the existing object
+
+            // Map fields from request DTO to the Address entity
+            addressToUpdate.setStreet(requestAddressDto.getStreet());
+            addressToUpdate.setCity(requestAddressDto.getCity());
+            addressToUpdate.setBuildingName(requestAddressDto.getBuildingName()); // Don't forget this!
+            addressToUpdate.setState(requestAddressDto.getState());
+            addressToUpdate.setCountry(requestAddressDto.getCountry());
+            addressToUpdate.setZipcode(requestAddressDto.getZipcode());
+
+            user.setAddress(addressToUpdate); // Set the (new or updated) address to the user
         }
+
+        return user;
     }
 
     private UserResponse mapToUserResponse(User user){
@@ -71,6 +89,7 @@ public class UserService {
 
         if (user.getAddress() != null) {
             AddressDTO addressDTO = new AddressDTO();
+            addressDTO.setAddressId(user.getAddress().getId());
             addressDTO.setStreet(user.getAddress().getStreet());
             addressDTO.setCity(user.getAddress().getCity());
             addressDTO.setState(user.getAddress().getState());
