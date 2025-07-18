@@ -6,7 +6,6 @@ import com.ecommerce.User.Payload.AddressDTO;
 import com.ecommerce.User.Payload.UserRequest;
 import com.ecommerce.User.Payload.UserResponse;
 import com.ecommerce.User.Repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,6 @@ public class UserService {
     }
 
 
-    @Transactional
     public void addUser(UserRequest userRequest){
         User user = new User();
         User userAdded= updateUserFromRequest(user, userRequest);
@@ -34,12 +32,12 @@ public class UserService {
     }
 
     public Optional<UserResponse> fetchUser(String id) {
-        return userRepository.findById(Integer.parseInt(id))
+        return userRepository.findById(id)
                 .map(this::mapToUserResponse);
     }
 
     public boolean updateUser(String id, UserRequest updatedUserRequest) {
-        return userRepository.findById(Integer.parseInt(id))
+        return userRepository.findById(id)
                 .map(existingUser -> {
                     updateUserFromRequest(existingUser, updatedUserRequest);
                     userRepository.save(existingUser);
@@ -89,7 +87,6 @@ public class UserService {
 
         if (user.getAddress() != null) {
             AddressDTO addressDTO = new AddressDTO();
-            addressDTO.setAddressId(user.getAddress().getId());
             addressDTO.setStreet(user.getAddress().getStreet());
             addressDTO.setCity(user.getAddress().getCity());
             addressDTO.setState(user.getAddress().getState());

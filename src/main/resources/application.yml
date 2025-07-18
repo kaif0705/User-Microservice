@@ -2,17 +2,22 @@ spring:
   application:
     name: user-service
     #Database configuration
-  datasource:
-    url: jdbc:postgresql://localhost:5432/userDB
-    username: embarkx
-    password: embarkx
+  data:
+    mongodb:
+      uri: mongodb://mongodb:Kaif12345@localhost:27017/userdb?authSource=admin
+      authentication-database: admin
 
-  jpa:
-    database: POSTGRESQL
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/userDB
+#    username: embarkx
+#    password: embarkx
+#
+#  jpa:
+#    database: POSTGRESQL
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 #Server configuration
 server:
