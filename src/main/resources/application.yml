@@ -4,9 +4,11 @@ spring:
     #Database configuration
   data:
     mongodb:
-      uri: mongodb://mongodb:Kaif12345@localhost:27017/userdb?authSource=admin
-      authentication-database: admin
-
+#      For-Remote DB
+      uri: mongodb+srv://mongodb:Kaif12345@user-microservice-datab.91ul3by.mongodb.net/?retryWrites=true&w=majority&appName=user-microservice-database
+#      For container based DB
+#      authentication-database: admin
+      database: user-microservice-database
 #  datasource:
 #    url: jdbc:postgresql://localhost:5432/userDB
 #    username: embarkx
